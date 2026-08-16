@@ -51,6 +51,12 @@ def write_tags_file(tags_map, sync_after):
     if hkml_sync.syncup_ready() and sync_after is True:
         hkml_sync.syncup(_hkml.get_hkml_dir(), remote=None)
 
+def tags_of_msgid(msgid):
+    tags_map = read_tags_file()
+    if msgid in tags_map:
+        return tags_map[msgid]['tags']
+    return []
+
 def mails_of_tag(tag):
     tags_map = read_tags_file()
     mails = []
