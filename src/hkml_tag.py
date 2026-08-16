@@ -17,9 +17,6 @@ keys 'mail' and 'tags'.  'mail' is _hkml.Mail.to_kvpairs() output of the mail
 of the message id.  'tags' is a list of tags for the mail.
 '''
 
-def tag_file_path():
-    return os.path.join(_hkml.get_hkml_dir(), 'tags')
-
 def read_tags_file():
     tags_map = {}
     for filename in os.listdir(_hkml.get_hkml_dir()):
