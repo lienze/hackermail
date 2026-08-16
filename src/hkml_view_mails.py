@@ -1240,10 +1240,8 @@ def generate_mails_list_data(list_args):
 
 def ask_focus_row_display_effect(mails_view_data, called_from_menu):
     if called_from_menu is False:
-        config = hkml_config.read_config_file()
-        name = 'list-display-rule-focused-row'
-        if name in config:
-            val = config[name]
+        val = hkml_config.get_config('list-display-rule-focused-row')
+        if val is not None:
             effect = None
             color = None
             if val == 'reverse':
