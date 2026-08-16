@@ -3,9 +3,12 @@
 import json
 import os
 import sys
+import time
 
 import _hkml
 import _hkml_list_cache
+import hkml_config
+import hkml_view
 import hkml_sync
 
 '''
@@ -24,6 +27,11 @@ increase for each 100 entries limit.  The last <100 entries are saved into
 '''
 
 def read_tags_file():
+    profile_runtime = hkml_config.get_config(
+            'tag_profile_file_io_time') == 'true'
+    if profile_runtime is True:
+        start_time = time.time()
+
     tags_map = {}
     for filename in os.listdir(_hkml.get_hkml_dir()):
         if not filename.startswith('tags'):
@@ -31,9 +39,19 @@ def read_tags_file():
         with open(os.path.join(_hkml.get_hkml_dir(), filename), 'r') as f:
             for k, v in json.load(f).items():
                 tags_map[k] = v
+
+    if profile_runtime is True:
+        read_time_seconds = time.time() - start_time
+        hkml_view.log('tag file read time: %s seconds' % read_time_seconds)
+
     return tags_map
 
 def write_tags_single_file(tags_map, file_idx):
+    profile_runtime = hkml_config.get_config(
+            'tag_profile_file_io_time') == 'true'
+    if profile_runtime is True:
+        start_time = time.time()
+
     if file_idx is not None:
         suffix = '_%d' % file_idx
     else:
@@ -41,6 +59,10 @@ def write_tags_single_file(tags_map, file_idx):
     file_path = os.path.join(_hkml.get_hkml_dir(), 'tags%s' % suffix)
     with open(file_path, 'w') as f:
         json.dump(tags_map, f, indent=4, sort_keys=True)
+
+    if profile_runtime is True:
+        read_time_seconds = time.time() - start_time
+        hkml_view.log('tag files write time: %s seconds' % read_time_seconds)
 
 def write_tags_file(tags_map, sync_after):
     max_mails_per_file = 100
