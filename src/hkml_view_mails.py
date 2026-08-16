@@ -288,12 +288,7 @@ def do_remove_tags(data, answer, selection):
 
 def manage_tags_of_mail(slist, mail):
     msgid = mail.get_msgid()
-    tags_map = hkml_tag.read_tags_file()
-
-    if msgid in tags_map:
-        tags = tags_map[msgid]['tags']
-    else:
-        tags = []
+    tags = hkml_tag.tags_of_msgid(msgid)
 
     msg_lines = ['Handle tags of the mail ("%s")' % mail.subject]
     if len(tags) > 0:
