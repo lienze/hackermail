@@ -28,6 +28,10 @@ def write_config_file(config):
     with open(config_file_path(), 'w') as f:
         json.dump(config, f, indent=4, sort_keys=True)
 
+def get_config(name):
+    config = read_config_file()
+    return config.get(name, None)
+
 def main(args):
     config = read_config_file()
     if args.action == 'set':
