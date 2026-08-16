@@ -9,12 +9,18 @@ import _hkml_list_cache
 import hkml_sync
 
 '''
-Tags information is saved in a json file called 'tags' under the hkml
+Tags information is saved in json files named 'tags[_<number>]' under the hkml
 directory.
 
 The data structure is a map.  Keys are msgid of mails.  Values are map having
 keys 'mail' and 'tags'.  'mail' is _hkml.Mail.to_kvpairs() output of the mail
 of the message id.  'tags' is a list of tags for the mail.
+
+The map is saved into the files in the following process.  First, map entries
+are sorted by the msgid key.  Then, the key-value pairs are saved into
+tags_<number> file for 100 entries each.  The <number> starts from 0 and
+increase for each 100 entries limit.  The last <100 entries are saved into
+'tags' file.
 '''
 
 def read_tags_file():
