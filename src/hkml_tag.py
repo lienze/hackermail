@@ -62,9 +62,14 @@ def write_tags_single_file(tags_map, file_idx):
 
     if profile_runtime is True:
         read_time_seconds = time.time() - start_time
-        hkml_view.log('tag files write time: %s seconds' % read_time_seconds)
+        hkml_view.log('tag file write time: %s seconds' % read_time_seconds)
 
 def write_tags_file(tags_map, sync_after):
+    profile_runtime = hkml_config.get_config(
+            'tag_profile_file_io_time') == 'true'
+    if profile_runtime is True:
+        start_time = time.time()
+
     max_mails_per_file = 100
     tags_map_to_write = {}
     file_idx = 0
@@ -78,6 +83,10 @@ def write_tags_file(tags_map, sync_after):
 
     if hkml_sync.syncup_ready() and sync_after is True:
         hkml_sync.syncup(_hkml.get_hkml_dir(), remote=None)
+
+    if profile_runtime is True:
+        read_time_seconds = time.time() - start_time
+        hkml_view.log('tag files write time: %s seconds' % read_time_seconds)
 
 def tags_of_msgid(msgid):
     tags_map = read_tags_file()
